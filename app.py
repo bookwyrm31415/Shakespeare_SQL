@@ -26,3 +26,8 @@ def index():
         print(request.form["searchLine"])
         conn.close()
         return render_template("index.html", lines=lines)
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
+    <h1>{% block title %} Welcome to ShakespeareQL{% endblock %}</h1>
 
     <form method="post">
         <div class="form-group">
@@ -14,7 +14,9 @@
     </form>
     {% for line in lines %}
             <p>{{ line['playerline'] }}</p>
-        <span>{{ line['player'] }}</span>
+        <p>{{ line['player'] }}</p>
+        <p>ACT: {{ line['act']}},Scene: {{ line['scene']}},Line: {{ line['line']}}</p>
+        <p>Play: {{ line['play']}}</p>
         <hr>
     {% endfor %}
 {% endblock %}
