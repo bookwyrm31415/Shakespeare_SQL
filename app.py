@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import sqlite3
 
 
@@ -11,9 +11,18 @@ def get_db_connection():
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=("GET", "POST"))
 def index():
-    conn = get_db_connection()
-    lines = conn.execute("SELECT * FROM shakespeare").fetchall()
-    conn.close()
-    return render_template("index.html", lines=lines)
+    if request.method != "POST":
+        return render_template("index.html")
+    else:
+        conn = get_db_connection()
+
+        lines = conn.execute(
+            f"select * from playsearch join shakespeare on playsearch.playsrowid = shakespeare.dataline where text match '{request.form['searchLine']}'"
+        ).fetchall()
+
+        print(len(lines))
+        print(request.form["searchLine"])
+        conn.close()
+        return render_template("index.html", lines=lines)
