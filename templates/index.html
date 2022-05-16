@@ -13,10 +13,12 @@
 
     </form>
     {% for line in lines %}
-            <p>{{ line['playerline'] }}</p>
+        
+        <p>{{ line['playerline'] }}</p>
         <p>{{ line['player'] }}</p>
         <p>ACT: {{ line['act']}},Scene: {{ line['scene']}},Line: {{ line['line']}}</p>
         <p>Play: {{ line['play']}}</p>
+        <a href="{{ url_for('scene')}}?play={{line['play']}}&act={{line['act']}}&scene={{line['scene']}}">Go to full scene</a>
         <hr>
     {% endfor %}
 {% endblock %}

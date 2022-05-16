@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+    <h1>{% block title %} {{lines[0]['play']}}, Act: {{lines[0]['act']}}, Scene: {{lines[0]['scene']}}  {% endblock %}</h1>
+
+
+    {% for line in lines %}
+        <p>{{ line['player'] }} : {{ line['playerline'] }}</p>
+    {% endfor %}
+
+
+{% endblock %}

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from werkzeug.exceptions import abort
 import sqlite3
 
 
@@ -6,6 +7,18 @@ def get_db_connection():
     conn = sqlite3.connect("static\shakespeare.db")
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def get_scene(play, act, scene):
+    conn = get_db_connection()
+    lines = conn.execute(
+        "SELECT * FROM shakespeare WHERE play = ? and act = ? and scene = ? order by dataline",
+        (play, act, scene),
+    ).fetchall()
+    conn.close()
+    if lines is None:
+        abort(404)
+    return lines
 
 
 app = Flask(__name__)
@@ -17,9 +30,10 @@ def index():
         return render_template("index.html")
     else:
         conn = get_db_connection()
-
+        searchline = request.form["searchLine"]
         lines = conn.execute(
-            f"select * from playsearch join shakespeare on playsearch.playsrowid = shakespeare.dataline where text match '{request.form['searchLine']}'"
+            f"select * from playsearch join shakespeare on playsearch.playsrowid = shakespeare.dataline where text match ?",
+            (searchline,),
         ).fetchall()
 
         print(len(lines))
@@ -31,3 +45,14 @@ def index():
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+
+@app.route("/scene")
+def scene():
+    play = request.args.get("play", "")
+    act = request.args.get("act", "")
+    scene = request.args.get("scene", "")
+
+    lines = get_scene(play, act, scene)
+
+    return render_template("scene.html", lines=lines)
