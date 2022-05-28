@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from werkzeug.exceptions import abort
 import sqlite3
+import string
 
 
 def get_db_connection():
@@ -31,6 +32,9 @@ def index():
     else:
         conn = get_db_connection()
         searchline = request.form["searchLine"]
+        # Removes punctuation
+        searchline = searchline.translate(str.maketrans("", "", string.punctuation))
+
         lines = conn.execute(
             f"select * from playsearch join shakespeare on playsearch.playsrowid = shakespeare.dataline where text match ?",
             (searchline,),
@@ -39,7 +43,7 @@ def index():
         print(len(lines))
         print(request.form["searchLine"])
         conn.close()
-        return render_template("index.html", lines=lines)
+        return render_template("index.html", lines=lines, length = len(lines))
 
 
 @app.route("/about")

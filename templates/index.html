@@ -5,13 +5,23 @@
 
     <form method="post">
         <div class="form-group">
-            <label for="searchLine">Line</label>
+            
             <input type="text" name="searchLine"
                    placeholder="Enter a line you kinda remember" class="form-control"
                    value="{{ request.form['line'] }}"></input>
         </div>
 
     </form>
+
+    
+    <!-- prints out length of search -->
+    {% if length > 0 %}
+    <div>There are {{length}} lines matching you search</div>
+    <hr>
+    <br>
+
+    {% endif %}
+
     {% for line in lines %}
         
         <p>{{ line['playerline'] }}</p>
